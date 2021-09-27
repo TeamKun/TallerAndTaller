@@ -167,7 +167,8 @@ public class TallerAndTaller {
         Entity entity = e.getEntity();
         if (entity instanceof PlayerEntity) {
             PlayerEntity player = ((PlayerEntity) entity);
-            float jumpHeight = Math.max(1.0F, (float) Math.pow(uuidScaleMap.getOrDefault(player.getUniqueID(), Config.defaultScale), 0.6));
+            float scale = uuidScaleMap.getOrDefault(player.getUniqueID(), Config.defaultScale);
+            float jumpHeight = Math.max(1.0F, (float) Math.pow(scale, 0.6F));
             player.setMotion(player.getMotion().mul(1, jumpHeight, 1));
         }
     }
@@ -176,7 +177,12 @@ public class TallerAndTaller {
     public void onPlayerFall(LivingFallEvent e) {
         if (e.getEntity() instanceof PlayerEntity) {
             PlayerEntity player = ((PlayerEntity) e.getEntity());
-            e.setDistance(e.getDistance() / uuidScaleMap.getOrDefault(player.getUniqueID(), Config.defaultScale));
+            float scale = uuidScaleMap.getOrDefault(player.getUniqueID(), Config.defaultScale);
+            e.setDistance(e.getDistance() / scale);
+
+            if (scale < 0.45F) {
+                e.setDistance(0.0F);
+            }
         }
     }
 

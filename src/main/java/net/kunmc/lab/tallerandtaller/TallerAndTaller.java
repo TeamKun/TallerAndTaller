@@ -201,10 +201,12 @@ public class TallerAndTaller {
     @OnlyIn(Dist.DEDICATED_SERVER)
     @SubscribeEvent
     public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent e) {
-        uuidScaleMap.putIfAbsent(e.getPlayer().getUniqueID(), Config.defaultScale);
+        PlayerEntity player = e.getPlayer();
+        uuidScaleMap.putIfAbsent(player.getUniqueID(), Config.defaultScale);
+        changeScale(player, uuidScaleMap.get(player.getUniqueID()));
         uuidScaleMap.forEach((k, v) -> {
             channel.send(PacketDistributor.PLAYER.with(() -> {
-                return (ServerPlayerEntity) e.getPlayer();
+                return (ServerPlayerEntity) player;
             }), new ScaleChangePacket(k, v));
         });
     }
